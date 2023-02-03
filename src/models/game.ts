@@ -7,7 +7,7 @@ export enum GameCategory {
 export interface Game {
   category: GameCategory;
   questions: {
-    hint: string;
+    question: string;
     word: string;
     answer: string;
     complexity: number;
