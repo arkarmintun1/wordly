@@ -1,4 +1,4 @@
-package com.wordly;
+package com.wordly.app;
 
 import android.app.Application;
 import com.facebook.react.PackageList;
@@ -8,6 +8,9 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader;
+import com.wordly.app.BuildConfig;
+import com.wordly.ReactNativeFlipper;
+
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {

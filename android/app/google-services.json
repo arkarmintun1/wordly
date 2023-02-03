@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1089232505831",
+    "project_id": "wordly-d558c",
+    "storage_bucket": "wordly-d558c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1089232505831:android:e4bc244e1950a54af74b42",
+        "android_client_info": {
+          "package_name": "com.wordly.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1089232505831-vfd2skd8ivalt6gra4s01v6f9grurubt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBidO76Lf2oPO4dclgfjApgn42N_88JrP8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1089232505831-vfd2skd8ivalt6gra4s01v6f9grurubt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

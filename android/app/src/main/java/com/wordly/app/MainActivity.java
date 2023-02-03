@@ -1,4 +1,4 @@
-package com.wordly;
+package com.wordly.app;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
