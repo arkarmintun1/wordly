@@ -1,35 +1,41 @@
-import { Button, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import React, { useLayoutEffect } from 'react';
+import { Button, StyleSheet, Text, View } from 'react-native';
+import { Loaders } from '../../models';
+import IconButton from '../components/logout-button';
 import { RootStackParamList } from '../navigation';
 import Route from '../navigation/route';
-import authService from '../../services/auth.service';
-import { useAppSelector } from '../redux';
+import { authActions, useAppDispatch, useAppSelector } from '../redux';
 import { appSelectors } from '../redux/app/app.slice';
-import { Loaders } from '../../models';
 
 type Props = NativeStackScreenProps<RootStackParamList, Route.Home>;
 
 const HomeScreen = ({ navigation }: Props) => {
+  const dispatch = useAppDispatch();
+
   const isLoading = useAppSelector(appSelectors.selectLoader(Loaders.Home));
 
+  const onPressLogout = () => {
+    dispatch(authActions.logout());
+  };
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <IconButton iconName="log-out" onPress={onPressLogout} />
+      ),
+    });
+  }, [navigation]);
+
   return (
-    <SafeAreaView>
-      <View style={styles.root}>
-        <Text>Home</Text>
-        <Button title="Game" onPress={() => navigation.navigate(Route.Game)} />
-        <Button
-          title="Leaderboard"
-          onPress={() => navigation.navigate(Route.Leaderboard)}
-        />
-        <Button
-          disabled={isLoading}
-          title="Logout"
-          onPress={() => authService.logout()}
-        />
-      </View>
-    </SafeAreaView>
+    <View style={styles.root}>
+      <Text>Home</Text>
+      <Button title="Game" onPress={() => navigation.navigate(Route.Game)} />
+      <Button
+        title="Leaderboard"
+        onPress={() => navigation.navigate(Route.Leaderboard)}
+      />
+    </View>
   );
 };
 

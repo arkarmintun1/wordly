@@ -5,7 +5,6 @@ import { appActions } from '../app/app.slice';
 import { authActions } from './auth.slice';
 
 function* loginAnonymously() {
-  console.log('this is called');
   try {
     yield put(appActions.setLoader(Loaders.SignIn, true));
     yield call(authService.loginAnonymously);
@@ -16,6 +15,15 @@ function* loginAnonymously() {
   }
 }
 
+function* logout() {
+  try {
+    yield call(authService.logout);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export function* authSagas() {
   yield takeLatest(authActions.loginAnonymously, loginAnonymously);
+  yield takeLatest(authActions.logout, logout);
 }

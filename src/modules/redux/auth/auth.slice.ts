@@ -14,6 +14,7 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     loginAnonymously: () => {},
+    logout: () => {},
   },
 });
 
