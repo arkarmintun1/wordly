@@ -5,10 +5,15 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation';
 import Route from '../navigation/route';
 import authService from '../../services/auth.service';
+import { useAppSelector } from '../redux';
+import { appSelectors } from '../redux/app/app.slice';
+import { Loaders } from '../../models';
 
 type Props = NativeStackScreenProps<RootStackParamList, Route.Home>;
 
 const HomeScreen = ({ navigation }: Props) => {
+  const isLoading = useAppSelector(appSelectors.selectLoader(Loaders.Home));
+
   return (
     <SafeAreaView>
       <View style={styles.root}>
@@ -18,7 +23,11 @@ const HomeScreen = ({ navigation }: Props) => {
           title="Leaderboard"
           onPress={() => navigation.navigate(Route.Leaderboard)}
         />
-        <Button title="Logout" onPress={() => authService.logout()} />
+        <Button
+          disabled={isLoading}
+          title="Logout"
+          onPress={() => authService.logout()}
+        />
       </View>
     </SafeAreaView>
   );

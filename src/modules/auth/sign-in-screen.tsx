@@ -3,21 +3,30 @@ import React from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Fonts } from '../../design';
-import authService from '../../services/auth.service';
+import { Loaders } from '../../models';
 import Route, { RootStackParamList } from '../navigation/route';
+import { authActions, useAppDispatch, useAppSelector } from '../redux';
+import { appSelectors } from '../redux/app/app.slice';
 
 type Props = NativeStackScreenProps<RootStackParamList, Route.SignIn>;
 
 const SignInScreen = ({}: Props) => {
+  const isLoading = useAppSelector(appSelectors.selectLoader(Loaders.SignIn));
+  const dispatch = useAppDispatch();
+
   const onPressSignIn = () => {
-    authService.loginAnonymously();
+    dispatch(authActions.loginAnonymously());
   };
 
   return (
     <SafeAreaView>
       <View style={styles.root}>
         <Text style={styles.title}>Wordly</Text>
-        <Button title="Sign In Anonymous" onPress={onPressSignIn} />
+        <Button
+          disabled={isLoading}
+          title={isLoading ? 'Loading' : 'Sign In Anonymous'}
+          onPress={onPressSignIn}
+        />
       </View>
     </SafeAreaView>
   );
