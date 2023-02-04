@@ -2,6 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Fonts } from '../../design';
 import authService from '../../services/auth.service';
 import Route, { RootStackParamList } from '../navigation/route';
 
@@ -16,7 +17,7 @@ const SignInScreen = ({}: Props) => {
     <SafeAreaView>
       <View style={styles.root}>
         <Text style={styles.title}>Wordly</Text>
-        <Button title="Sign In" onPress={onPressSignIn} />
+        <Button title="Sign In Anonymous" onPress={onPressSignIn} />
       </View>
     </SafeAreaView>
   );
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
     rowGap: 100,
   },
   title: {
-    fontWeight: 'bold',
     fontSize: 50,
+    fontFamily: Fonts.PlayfairDisplay_Medium,
   },
 });
