@@ -23,9 +23,7 @@ const MainNavigator = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName={Route.Home}
-        screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName={Route.Home} screenOptions={{}}>
         {user ? (
           <>
             <Stack.Screen name={Route.Home} component={HomeScreen} />
@@ -37,7 +35,11 @@ const MainNavigator = () => {
           </>
         ) : (
           <>
-            <Stack.Screen name={Route.SignIn} component={SignInScreen} />
+            <Stack.Screen
+              name={Route.SignIn}
+              component={SignInScreen}
+              options={{ headerShown: false }}
+            />
           </>
         )}
       </Stack.Navigator>

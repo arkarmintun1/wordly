@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation';
 import Route from '../navigation/route';
+import authService from '../../services/auth.service';
 
 type Props = NativeStackScreenProps<RootStackParamList, Route.Home>;
 
@@ -17,6 +18,7 @@ const HomeScreen = ({ navigation }: Props) => {
           title="Leaderboard"
           onPress={() => navigation.navigate(Route.Leaderboard)}
         />
+        <Button title="Logout" onPress={() => authService.logout()} />
       </View>
     </SafeAreaView>
   );
