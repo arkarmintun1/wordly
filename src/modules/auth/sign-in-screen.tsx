@@ -23,6 +23,7 @@ const SignInScreen = ({}: Props) => {
       <View style={styles.root}>
         <Text style={styles.title}>Wordly</Text>
         <Button
+          testID="sign-in-button"
           disabled={isLoading}
           title={isLoading ? 'Loading' : 'Sign In Anonymous'}
           onPress={onPressSignIn}

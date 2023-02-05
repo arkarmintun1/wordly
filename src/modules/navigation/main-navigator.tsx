@@ -26,8 +26,16 @@ const MainNavigator = () => {
       <Stack.Navigator initialRouteName={Route.Home} screenOptions={{}}>
         {user ? (
           <>
-            <Stack.Screen name={Route.Home} component={HomeScreen} />
-            <Stack.Screen name={Route.Game} component={GameScreen} />
+            <Stack.Screen
+              name={Route.Home}
+              component={HomeScreen}
+              options={{ headerTransparent: true, title: '' }}
+            />
+            <Stack.Screen
+              name={Route.Game}
+              component={GameScreen}
+              options={{ headerTransparent: true, title: '' }}
+            />
             <Stack.Screen
               name={Route.Leaderboard}
               component={LeaderboardScreen}

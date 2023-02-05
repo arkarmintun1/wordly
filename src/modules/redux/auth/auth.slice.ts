@@ -1,8 +1,8 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 
 interface AuthState {
-  id?: number;
+  id?: string;
 }
 
 const initialState: AuthState = {
@@ -13,6 +13,9 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
+    setId: (state, action: PayloadAction<string>) => {
+      state.id = action.payload;
+    },
     loginAnonymously: () => {},
     logout: () => {},
   },

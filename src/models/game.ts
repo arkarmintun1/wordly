@@ -1,16 +1,12 @@
-export enum GameCategory {
-  ANIMALS = 'ANIMALS',
-  CITIES = 'CITIES',
-  FOOD = 'FOOD',
+export interface Question {
+  question: string;
+  answer: string;
+  complexity: number;
+  userAnswer: string;
 }
 
 export interface Game {
-  category: GameCategory;
-  questions: {
-    question: string;
-    word: string;
-    answer: string;
-    complexity: number;
-  }[];
+  category: string;
+  questions: Question[];
   points: number;
 }

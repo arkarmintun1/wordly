@@ -4,6 +4,7 @@ import authSlice from './auth/auth.slice';
 import userSlice from './user/user.slice';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from './saga';
+import gameSlice from './game/game.slice';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -11,15 +12,18 @@ const middlewares: any[] = [];
 
 middlewares.push(sagaMiddleware);
 
-export const store = configureStore({
+export const storeOptions = {
   reducer: {
     [userSlice.name]: userSlice.reducer,
     [authSlice.name]: authSlice.reducer,
     [appSlice.name]: appSlice.reducer,
+    [gameSlice.name]: gameSlice.reducer,
   },
-  middleware: getDefaultMiddleware =>
+  middleware: (getDefaultMiddleware: any) =>
     getDefaultMiddleware().concat(middlewares),
-});
+};
+
+export const store = configureStore(storeOptions);
 
 sagaMiddleware.run(rootSaga);
 

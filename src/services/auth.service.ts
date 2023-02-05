@@ -4,7 +4,7 @@ class AuthService {
   async loginAnonymously() {
     try {
       const userCredential = await auth().signInAnonymously();
-      console.log('User signed in anonymously', userCredential);
+      return userCredential.user.uid;
     } catch (error: any) {
       console.error(error);
     }

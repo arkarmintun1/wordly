@@ -1,19 +1,21 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import React, { useLayoutEffect } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
-import { Loaders } from '../../models';
+import React, { useEffect, useLayoutEffect } from 'react';
+import { Button, FlatList, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Fonts } from '../../design';
 import IconButton from '../components/logout-button';
 import { RootStackParamList } from '../navigation';
 import Route from '../navigation/route';
 import { authActions, useAppDispatch, useAppSelector } from '../redux';
-import { appSelectors } from '../redux/app/app.slice';
+import { gameActions, gameSelectors } from '../redux/game/game.slice';
+import GameCategoryItem from './game-category-item';
 
 type Props = NativeStackScreenProps<RootStackParamList, Route.Home>;
 
 const HomeScreen = ({ navigation }: Props) => {
   const dispatch = useAppDispatch();
 
-  const isLoading = useAppSelector(appSelectors.selectLoader(Loaders.Home));
+  const gameCategories = useAppSelector(gameSelectors.selectCategories);
 
   const onPressLogout = () => {
     dispatch(authActions.logout());
@@ -27,15 +29,31 @@ const HomeScreen = ({ navigation }: Props) => {
     });
   }, [navigation]);
 
+  useEffect(() => {
+    dispatch(gameActions.getCategories());
+  }, []);
+
   return (
-    <View style={styles.root}>
-      <Text>Home</Text>
-      <Button title="Game" onPress={() => navigation.navigate(Route.Game)} />
-      <Button
-        title="Leaderboard"
-        onPress={() => navigation.navigate(Route.Leaderboard)}
-      />
-    </View>
+    <SafeAreaView>
+      <View style={styles.root}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>Wordly</Text>
+        </View>
+        <View style={styles.flatlistContainer}>
+          <FlatList
+            style={styles.flatlist}
+            data={gameCategories}
+            renderItem={info => <GameCategoryItem label={info.item} />}
+          />
+        </View>
+        <View style={styles.leaderboard}>
+          <Button
+            title="Leaderboard"
+            onPress={() => navigation.navigate(Route.Leaderboard)}
+          />
+        </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -47,5 +65,29 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: '100%',
+  },
+  titleContainer: {
+    height: '20%',
+    display: 'flex',
+    justifyContent: 'center',
+  },
+  title: {
+    fontFamily: Fonts.PlayfairDisplay_Medium,
+    fontSize: 30,
+  },
+  flatlistContainer: {
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  flatlist: {
+    flexGrow: 0,
+  },
+  leaderboard: {
+    height: '10%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
