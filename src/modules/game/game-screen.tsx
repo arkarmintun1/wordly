@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import _ from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Fonts } from '../../design';
+import gameService from '../../services/game.service';
 import { generateBoxShadowStyle, generateRandomCharacter } from '../../utils';
 import { RootStackParamList } from '../navigation';
 import Route from '../navigation/route';
@@ -27,6 +28,18 @@ const GameScreen = ({ navigation, route }: Props) => {
   const [answer, setAnswer] = useState<string[]>();
   const [userAnswer, setUserAnswer] = useState<string[]>();
   const numColumns = 5;
+  const [score, setScore] = useState(0);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Text
+          style={
+            styles.scoreText
+          }>{`${score}/${currentGame?.questions.length}`}</Text>
+      ),
+    });
+  }, [navigation, score, currentGame]);
 
   useEffect(() => {
     dispatch(gameActions.getGame(route.params.quizType));
@@ -48,13 +61,24 @@ const GameScreen = ({ navigation, route }: Props) => {
     setUserAnswer(new Array(answer.length).fill(''));
   }, [index, currentGame]);
 
-  const onPressNext = () => {
+  const onPressNext = async () => {
+    const newIndex = index + 1;
     if (game?.questions.length && index < game.questions.length - 1) {
-      setIndex(value => value + 1);
+      setIndex(newIndex);
+    }
+
+    const isLastAnswer =
+      currentGame?.questions.length &&
+      newIndex === currentGame?.questions.length - 1;
+
+    if (isLastAnswer) {
+      currentGame.points = score;
+      await gameService.saveGame(currentGame);
+      navigation.replace(Route.Leaderboard);
     }
   };
 
-  const onPressSelectedLetter = (value: string, index: number) => {
+  const onPressSelectedLetter = (value: string, _index: number) => {
     const _answer = _.clone(answer);
     const _userAnswer = _.clone(userAnswer);
     const emptyIndex = _answer?.findIndex(value => value === '');
@@ -66,12 +90,12 @@ const GameScreen = ({ navigation, route }: Props) => {
     ) {
       _answer[emptyIndex] = value;
       setAnswer(_answer);
-      _userAnswer[index] = '';
+      _userAnswer[_index] = '';
       setUserAnswer(_userAnswer);
     }
   };
 
-  const onPressAvailableLetter = (value: string, index: number) => {
+  const onPressAvailableLetter = async (value: string, _index: number) => {
     const _userAnswer = _.clone(userAnswer);
     const _answer = _.clone(answer);
     const emptyIndex = _userAnswer?.findIndex(value => value === '');
@@ -83,8 +107,33 @@ const GameScreen = ({ navigation, route }: Props) => {
     ) {
       _userAnswer[emptyIndex] = value;
       setUserAnswer(_userAnswer);
-      _answer[index] = '';
+      _answer[_index] = '';
       setAnswer(_answer);
+    }
+
+    const answerFull = _userAnswer?.every(value => value !== '');
+    const isLastAnswer =
+      currentGame?.questions.length &&
+      index === currentGame?.questions.length - 1;
+    if (answerFull && currentGame && _userAnswer) {
+      const correctAnswer = currentGame.questions[index].answer;
+      const userAnswer = _userAnswer?.join('');
+      currentGame.questions[index].userAnswer = userAnswer;
+      setCurrentGame(currentGame);
+
+      let points = score;
+      if (userAnswer === correctAnswer) {
+        points = points + 1;
+        setScore(points);
+      }
+
+      if (isLastAnswer) {
+        currentGame.points = points;
+        await gameService.saveGame(currentGame);
+        navigation.replace(Route.Leaderboard);
+      } else {
+        setIndex(currentIndex => currentIndex + 1);
+      }
     }
   };
 
@@ -92,8 +141,10 @@ const GameScreen = ({ navigation, route }: Props) => {
     <SafeAreaView>
       <View style={styles.root}>
         <View style={styles.game}>
-          <Text style={styles.question}>{question}</Text>
-          <View style={styles.wordsHolder}>
+          <Text style={styles.question} testID="game-question">
+            {question}
+          </Text>
+          <View style={styles.wordsHolder} testID="game-word-holder">
             <FlatList
               style={styles.flatlist}
               columnWrapperStyle={{ justifyContent: 'center' }}
@@ -133,7 +184,8 @@ const GameScreen = ({ navigation, route }: Props) => {
         <View style={styles.skipContainer}>
           <TouchableOpacity
             style={[styles.skip, styles.shadow]}
-            onPress={onPressNext}>
+            onPress={onPressNext}
+            testID="skip-button">
             <Text style={styles.skipText}>Skip</Text>
           </TouchableOpacity>
         </View>
@@ -215,5 +267,10 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.RobotoSlab,
     color: 'white',
     letterSpacing: 2.0,
+  },
+  scoreText: {
+    fontFamily: Fonts.RobotoSlab,
+    letterSpacing: 2.0,
+    fontSize: 20,
   },
 });

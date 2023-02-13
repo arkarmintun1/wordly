@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { Game, Loaders } from '../../../models';
+import { Game, Leaderboard, Loaders } from '../../../models';
 import gameService from '../../../services/game.service';
 import { appActions } from '../app/app.slice';
 import { gameActions } from './game.slice';
@@ -26,7 +26,20 @@ function* getGameQuestions(action: ReturnType<typeof gameActions.getGame>) {
   }
 }
 
+function* getLeaderboard() {
+  try {
+    yield put(appActions.setLoader(Loaders.Leaderboard, true));
+    const leaderboard: Leaderboard = yield call(gameService.getLeaderboard);
+    yield put(gameActions.setLeaderboard(leaderboard));
+  } catch (error) {
+    console.error(error);
+  } finally {
+    yield put(appActions.setLoader(Loaders.Leaderboard, false));
+  }
+}
+
 export function* gameSagas() {
-  yield takeLatest(gameActions.getCategories, getGameCategories);
-  yield takeLatest(gameActions.getGame, getGameQuestions);
+  yield takeLatest(gameActions.getCategories.type, getGameCategories);
+  yield takeLatest(gameActions.getGame.type, getGameQuestions);
+  yield takeLatest(gameActions.getLeaderboard.type, getLeaderboard);
 }

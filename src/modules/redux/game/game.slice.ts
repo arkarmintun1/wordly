@@ -1,15 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Game, Question } from '../../../models';
+import { Game, Leaderboard } from '../../../models';
 import { RootState } from '../store';
 
 interface GameState {
   categories?: string[];
   game?: Game;
+  leaderboard?: Leaderboard;
 }
 
 const initialState: GameState = {
   categories: undefined,
   game: undefined,
+  leaderboard: undefined,
 };
 
 export const gameSlice = createSlice({
@@ -34,6 +36,11 @@ export const gameSlice = createSlice({
       },
       prepare: (game: Game) => ({ payload: game }),
     },
+
+    getLeaderboard: () => {},
+    setLeaderboard: (state, action: PayloadAction<Leaderboard>) => {
+      state.leaderboard = action.payload;
+    },
   },
 });
 
@@ -42,6 +49,7 @@ export const gameActions = gameSlice.actions;
 export const gameSelectors = {
   selectCategories: (state: RootState) => state.game.categories,
   selectGame: (state: RootState) => state.game.game,
+  selectLeaderboard: (state: RootState) => state.game.leaderboard,
 };
 
 export default gameSlice;

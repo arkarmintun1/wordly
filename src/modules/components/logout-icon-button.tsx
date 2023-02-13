@@ -9,12 +9,12 @@ type Props = {
   onPress?: () => void;
 };
 
-const IconButton = ({ iconName, size, color, onPress }: Props) => {
+const LogoutIconButton = ({ iconName, size, color, onPress }: Props) => {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} testID="logout-button">
       <Icon name={iconName} size={size} color={color} />
     </TouchableOpacity>
   );
 };
 
-export default IconButton;
+export default LogoutIconButton;

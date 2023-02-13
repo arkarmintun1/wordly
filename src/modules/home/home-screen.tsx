@@ -3,7 +3,8 @@ import React, { useEffect, useLayoutEffect } from 'react';
 import { Button, FlatList, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Fonts } from '../../design';
-import IconButton from '../components/logout-button';
+import LeaderBoardButton from '../components/leader-board-button';
+import LogoutIconButton from '../components/logout-icon-button';
 import { RootStackParamList } from '../navigation';
 import Route from '../navigation/route';
 import { authActions, useAppDispatch, useAppSelector } from '../redux';
@@ -24,7 +25,7 @@ const HomeScreen = ({ navigation }: Props) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <IconButton iconName="log-out" onPress={onPressLogout} />
+        <LogoutIconButton iconName="log-out" onPress={onPressLogout} />
       ),
     });
   }, [navigation]);
@@ -47,10 +48,7 @@ const HomeScreen = ({ navigation }: Props) => {
           />
         </View>
         <View style={styles.leaderboard}>
-          <Button
-            title="Leaderboard"
-            onPress={() => navigation.navigate(Route.Leaderboard)}
-          />
+          <LeaderBoardButton />
         </View>
       </View>
     </SafeAreaView>

@@ -1,5 +1,12 @@
+import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import { Game, Question } from '../models';
+import {
+  Game,
+  Leaderboard,
+  LeaderboardData,
+  LeaderboardItem,
+  Question,
+} from '../models';
 
 class GameService {
   async getGameCategories() {
@@ -34,6 +41,41 @@ class GameService {
     });
 
     return game;
+  }
+
+  async saveGame(game: Game) {
+    const userId = auth().currentUser?.uid;
+    await firestore()
+      .collection('leaderboard')
+      .doc(userId)
+      .set(
+        {
+          username: auth().currentUser?.displayName,
+          points: firestore.FieldValue.increment(game.points),
+        },
+        { merge: true },
+      );
+  }
+
+  async getLeaderboard() {
+    const leaderboard: Leaderboard = { items: [] };
+    const querySnapshot = await firestore()
+      .collection('leaderboard')
+      .orderBy('points', 'desc')
+      .limit(10)
+      .get();
+
+    querySnapshot.forEach(documentSnapshot => {
+      const id = documentSnapshot.id;
+      const data = documentSnapshot.data() as LeaderboardData;
+      leaderboard.items.push({
+        id: id,
+        username: data.username ?? id,
+        points: data.points,
+      });
+    });
+
+    return leaderboard;
   }
 }
 

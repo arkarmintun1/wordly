@@ -39,6 +39,7 @@ const MainNavigator = () => {
             <Stack.Screen
               name={Route.Leaderboard}
               component={LeaderboardScreen}
+              options={{ headerTransparent: true, title: 'Leaderboard' }}
             />
           </>
         ) : (
